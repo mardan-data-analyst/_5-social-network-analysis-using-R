@@ -1,0 +1,335 @@
+---
+title: "Social Network Analysis Using R"
+author: "Mardan Mirzaguliyev"
+date: '2022-07-11'
+output: html_document
+---
+
+Note: This markdown contains codes from the LinkedIn Learning course "Social Network Analysis Using R" by Curt Frye. Additionally, introduction paragraph from Technopedia website has been attached to better understand the topic.
+
+# Social Network Analysis (SNA)
+
+https://www.techopedia.com/definition/3205/social-network-analysis-sna
+
+Last updated: November 3, 2012
+
+What Does Social Network Analysis (SNA) Mean?
+
+Social network analysis (SNA) is a process of quantitative and qualitative analysis of a social network. SNA measures and maps the flow of relationships and relationship changes between knowledge-possessing entities. Simple and complex entities include websites, computers, animals, humans, groups, organizations and nations.
+
+The SNA structure is made up of node entities, such as humans, and ties, such as relationships. The advent of modern thought and computing facilitated a gradual evolution of the social networking concept in the form of highly complex, graph-based networks with many types of nodes and ties. These networks are the key to procedures and initiatives involving problem solving, administration and operations.
+
+Techopedia Explains Social Network Analysis (SNA)
+
+SNA usually refers to varied information and knowledge entities, but most actual studies focus on human (node) and relational (tie) analysis. The tie value is social capital.
+
+SNA is often diagrammed with points (nodes) and lines (ties) to present the intricacies related to social networking. Professional researchers perform analysis using software and unique theories and methodologies.
+
+**SNA research is conducted in either of the following ways:
+Studying the complete social network, including all ties in a defined population.
+Studying egocentric components, including all ties and personal communities, which involves studying relationship between the focal points in the network and the social ties they make in their communities.
+A snowball network forms when alters become egos and can create, or nominate, additional alters. Conducting snowball studies is difficult, due to logistical limitations. The abstract SNA concept is complicated further by studying hybrid networks, in which complete networks may create unlisted alters available for ego observation. Hybrid networks are analogous to employees affected by outside consultants, where data collection is not thoroughly defined.
+
+Three analytical tendencies make SNA distinctive, as follows:
+Groups are not assumed to be societal building blocks.
+Studies focus on how ties affect individuals and other relationships, versus discrete individuals, organizations or states.
+Studies focus on structure, the composition of ties and how they affect societal norms, versus assuming that socialized norms determine behavior.
+# CREATE NETWORK GRAPHS
+## Download and install sna and igraph
+```{r}
+#install.packages("igraph")
+#install.packages("sna")
+```
+
+
+```{r}
+library(igraph)
+library(sna)
+```
+
+## Format data for social network analysis
+
+Undirected and directed network
+
+## Create a graph from existing data
+
+```{r}
+g1 <- read.table("/cloud/project/undirected.txt")
+```
+
+```{r}
+head(g1)
+```
+
+```{r}
+graph1 <- graph_from_data_frame(g1, directed=FALSE, vertices=NULL)
+```
+
+```{r}
+plot(graph1)
+```
+
+## Create sample graphs
+
+```{r}
+g_full <- make_full_graph(8, directed=FALSE)
+```
+
+
+```{r}
+plot(g_full)
+```
+
+```{r}
+g_ring <- make_ring(12, directed=FALSE, mutual=FALSE, circular=TRUE)
+```
+
+```{r}
+plot(g_ring)
+```
+```{r}
+g_star <- make_star(10, center=1)
+```
+
+```{r}
+plot(g_star)
+```
+
+```{r}
+g_gnp1 <- sample_gnp(20, 0.3, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnp1)
+```
+
+```{r number of edges - 50}
+g_gnm1 <- sample_gnm(20, 50, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnm1)
+```
+
+```{r number of edges - 25}
+g_gnm2 <- sample_gnm(20, 25, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnm2)
+```
+
+```{r preferencial attachment}
+g_gpa <- sample_pa(20, power=1)
+```
+
+```{r}
+plot(g_gpa)
+```
+# ANALYZING NETWORK GRAPHS
+## Measure connectedness of of points
+
+```{r}
+g2 <- sample_pa(12, power=1, directed=FALSE)
+```
+
+```{r}
+plot(g2)
+```
+```{r}
+
+igraph::degree(g2)
+```
+
+## Measure betweenness of points
+
+```{r}
+g3 <- sample_pa(20, power=1, directed=FALSE)
+```
+
+```{r}
+plot(g3)
+```
+
+```{r}
+igraph::betweenness(g3)
+```
+
+## Calculate network density
+
+```{r}
+g4 <- sample_pa(12, power=1, directed=FALSE)
+```
+
+```{r}
+plot(g4)
+```
+
+```{r}
+ed1 <- edge_density(g4, loops=FALSE)
+ed1
+```
+
+```{r}
+g5 <- sample_pa(20, power=1, directed=FALSE)
+```
+
+```{r}
+plot(g5)
+```
+
+```{r}
+ed2 <-  edge_density(g5, loops=FALSE)
+ed2
+```
+
+```{r}
+g6 <- sample_pa(40, power=1, directed=FALSE)
+```
+
+```{r}
+plot(g6)
+```
+
+```{r}
+ed3 <- edge_density(g6, loops=FALSE)
+ed3
+```
+
+```{r}
+g_gnp2 <- sample_gnp(20, 0.3, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnp2)
+```
+
+```{r}
+ed4 <- edge_density(g_gnp2, loops=FALSE)
+ed4
+```
+
+```{r}
+g_gnp3 <- sample_gnp(20, 0.3, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnp3)
+```
+
+```{r}
+ed5 <- edge_density(g_gnp3, loops=FALSE)
+ed5
+```
+
+## Identify cliques in a graph
+
+```{r}
+g_gnp4 <- sample_gnp(20, 0.3, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnp4)
+```
+
+```{r}
+clique_num(g_gnp4)
+```
+
+```{r}
+cliques(g_gnp4, min=4)
+```
+
+```{r}
+cliques(g_gnp4, min=3, max=4)
+```
+
+```{r}
+g_gnp5 <- sample_gnp(20, 0.6, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnp5)
+```
+
+```{r}
+clique_num(g_gnp5)
+```
+
+## Find components of a graph
+
+```{r}
+g_gnp6 <- sample_gnp(30, 0.08, directed=FALSE, loops=FALSE)
+```
+
+```{r}
+plot(g_gnp6)
+```
+
+```{r}
+igraph::components(g_gnp6)
+```
+
+## Take a random walk on a graph
+
+```{r}
+g_gnp7 <- sample_gnp(30, 0.08, directed=FALSE) 
+```
+
+```{r}
+plot(g_gnp7)
+```
+
+```{r}
+random_walk(g_gnp7, 26, 8, stuck="return")
+```
+
+# Visualizing a network
+## Visualize a network
+
+```{r}
+g_gnp8 <- sample_gnp(30, 0.1)
+```
+
+```{r}
+plot(g_gnp8)
+```
+
+## Change edge and vertex colors
+
+```{r}
+g_gnp9 <- sample_gnp(30, 0.08)
+```
+
+```{r}
+plot(g_gnp9)
+```
+
+```{r}
+g_gnp10 <- sample_gnp(30, 0.08) %>% set_vertex_attr("color", value="blue") %>% set_edge_attr("color", value="gray")
+```
+
+```{r}
+plot(g_gnp10)
+```
+
+## Write out a graph
+
+```{r}
+g_gnp11 <- sample_gnp(30, 0.08, directed=FALSE)
+```
+
+```{r}
+plot(g_gnp11)
+```
+
+```{r}
+write.graph(g_gnp11, file="rand_network.txt", format="edgelist")
+```
+
+```{r}
+pdf("rand_network.pdf")
+plot(g_gnp11)
+dev.off()
+```
+
