@@ -1,2 +1,2 @@
 # social-network-analysis-using-R
-Guided codes of course from LinkedIn Learning by Curt Frye
+Guided codes of 5th course from LinkedIn Learning Path by Curt Frye
